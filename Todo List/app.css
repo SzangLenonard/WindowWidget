@@ -1,0 +1,110 @@
+html {
+	background-color: transparent;
+}
+*{
+	max-width: 300px;
+}
+body {
+ font-size: 14px;
+ width: 100%;
+ overflow: hidden;
+ color:white;
+ font-weight: bold;
+ visibility: visible;
+/* flow:horizontal-wrap;
+*/}
+
+line {
+	background: rgba(0,0,0,0.5);
+	width: 100%;
+	height: 3px;
+}
+
+.checked{
+	text-decoration: line-through;
+}
+
+div#header {
+	position: fixed;
+	top: 0;
+}
+
+div#app{
+    width:100%;
+}
+
+div#title{
+	background: rgba(0,0,0,0.5);
+	padding:3px;
+}
+
+
+    
+@set v-scroll-indicator {
+
+  .slider 
+  {
+    margin:0;
+    background: rgba(0,0,0,0.4);
+  }
+
+	.base {
+	width:5px; 
+	height: 10px;
+	}
+	.prev,.next,.base,.prev-page,.next-page {
+		background: transparent;
+	}
+
+}
+
+div#list {
+	font-size: 12px;
+	overflow: scroll-indicator;
+	vertical-scrollbar: "v-scroll-indicator";
+	margin-top: 50px;
+	max-height: 300px;
+}
+
+div#list {
+	overflow-y:  auto;
+}
+
+
+input[type=text] {
+	border: none;
+	outline: none;
+	background: transparent;
+	width: 95%;
+	color:white;
+	padding:10px 10xp 0 10px;
+	text-selection-caret-color:white;
+	border-bottom: 3px solid rgba(0,0,0,0.5);
+}
+
+input[type=checkbox]{
+	background: rgba(0,0,0,0.35);
+	transform: scale(0.75);
+	color:white;
+}
+input[type=checkbox]:checked {
+	background: gold;
+}
+
+input.focus {
+	/*border-top:3px solid rgba(0,0,0,0.5);*/
+}
+
+div#list .item {
+	max-width: 95%;
+}
+
+div#list .item span{
+
+}
+
+
+button {
+	background: transparent;
+	text-align: justify;
+}

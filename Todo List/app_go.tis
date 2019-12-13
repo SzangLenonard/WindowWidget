@@ -1,0 +1,126 @@
+var url = self.url()
+
+view.doEvent(#nowait)
+
+var _keycode = {
+	"enter": 13
+}
+
+var config =  parseData(view.getConfig())
+
+$(button#reload).on("click", function() {
+    view.quit_app()
+})
+
+var _themes = (function(){
+	if (config["position"]) {
+		view.move(config["position"].x || 100 ,config["position"].y || 100,320,480,true);
+		view.SavePosition(100,100)
+	} else {
+		view.move( 100 , 100,320,480,true);
+		view.SavePosition(100,100)
+	}
+})();
+
+
+var _event = (function(){
+	
+	view.on("size",function(evt){
+		var (x,y,w,h) = view.box(#rect)
+	})
+
+	view.on("move",function(){
+		var (cx, cy) = view.cursorLocation(); // relative to window client area.
+		var (vx, vy) = view.box(#position, #client, #screen); // pos of view's client area on virtual screen.
+		cx += vx; // location of
+		cy += vy; // cursor on the screen
+		view.SavePosition(vx,vy)
+	})
+
+})();
+
+
+// 
+var $input = self.$(input#add_item);
+var $list = self.$(#list);
+
+(function(_input){
+
+	var item_class = function(text,id,state){
+		var _el = new Element("div",{id:id,class:"item"});
+		var _checkbox = new Element("input",{type:"checkbox",name:"checkbox"})
+		var _span = new Element("span",{})
+		_span.setState = function(check){
+			if (check) {
+				_span.attributes.addClass("checked")
+			} else {
+				_span.attributes.removeClass("checked")
+			}
+		}
+		if (state != null){
+			_checkbox.state.checked  = state
+			_span.setState(state)
+		}
+
+		_el.append(_checkbox)
+
+		_el.add = function(text){
+			_span.text = text
+			_el.append(_span)
+		}
+		_el.get = function(){
+			return text
+		}
+		_el.getId = function(){
+			return id
+		}
+		_el.check = function(state){
+			_checkbox.checked = state
+		}
+		_checkbox.on("change",function(){
+			var _state = this.value
+			if (!_state){
+				// getDb.updateItemState(id,0)
+				view.UpdateItemStateSave(id,0)
+				_span.setState(0)
+			} else {
+				view.UpdateItemStateSave(id,1)
+				_span.setState(1)
+			}
+		})
+
+		_el.on("mousedown",function(){
+			_el.timer(500ms,function(){
+				_el.remove()
+				view.RemoveItemAndSave(_el.getId())
+			})
+		})
+
+		if (text) _el.add(text)
+		return _el 
+	}
+
+	_input.addItemElm = function(i){
+		var item = item_class(i.value,i.doc_id,i.state)
+		$list.append(item)
+	} 
+
+	// ==== Auto load from database 
+	var items = parseData(view.GetItems())
+	for (var i in items){
+		_input.addItemElm(i)
+	}
+	// ==== 
+
+	_input.on("keypress",function(evt){
+		if (!_input.value) return;
+		if (evt.keyCode == _keycode.enter) {
+			var item = view.AddItem(_input.value)
+			_input.addItemElm(parseData(item))
+			_input.value = ""
+			_input.state.focus = true
+		}
+		return false
+	})
+
+})(self.$(input#add_item));
